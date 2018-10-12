@@ -10,9 +10,6 @@ NOTE: Requires Markdown Extra. See http://michelf.ca/projects/php-markdown/extra
 <br/>
 <div class="title">
 Coding Guidelines
-</div><br/>
-<div class="subTitle">
-for C# 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 7.1, 7.2 and 7.3
 </div>
 <br/>
 <div class="author">
