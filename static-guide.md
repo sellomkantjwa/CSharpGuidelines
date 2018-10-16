@@ -270,6 +270,9 @@ When throwing or handling exceptions in code that uses `async`/`await` or a `Tas
 ### Always call `ConfigureAwait(false)` on async functions :white_circle:
 This avoids deadlocks but ensuring that continuation after await does not have to run in the caller context. See [this article](https://medium.com/bynder-tech/c-why-you-should-use-configureawait-false-in-your-library-code-d7837dce3d7f)
 
+### Prefer `async` and `await` when creating methods :red_circle:
+Using the async-await frees up resources on the current thread for other processes and should be preferred.
+
 ### Use generic constraints if applicable :red_circle:
 Instead of casting to and from the object type in generic types or methods, use `where` constraints or the `as` operator to specify the exact characteristics of the generic parameter.
 
@@ -734,3 +737,113 @@ if (user is RemoteUser remoteUser)
 ### Don't comment out code :red_circle:
 
 Never check in code that is commented out. Instead, use a work item tracking system to keep track of some work to be done. Nobody knows what to do when they encounter a block of commented-out code. Was it temporarily disabled for testing purposes? Was it copied as an example? Should I delete it?
+
+### Use proper casing for language elements :red_circle: 
+
+| Language element&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Casing&nbsp;&nbsp;&nbsp;&nbsp;|Example|
+|--------------------|----------|:-----------
+| Namespace | Pascal | `System.Drawing` |
+| Type parameter | Pascal | `TView` |
+| Interface | Pascal | `IBusinessService`
+| Class, struct | Pascal | `AppDomain`
+| Enum | Pascal | `ErrorLevel` |
+| Enum member | Pascal | `FatalError` |
+| Resource key | Pascal | `SaveButtonTooltipText` |
+| Constant field | Pascal | `MaximumItems` |
+| Private static readonly field | Pascal | `RedValue` |
+| Private field | Camel | `_listItem` |
+| Non-private field | Pascal | `MainPanel` |
+| Property | Pascal | `BackColor` |
+| Event | Pascal | `Click` |
+| Method | Pascal | `ToString` |
+| Local function | Pascal | `FormatText` |
+| Parameter | Camel | `typeName` |
+| Tuple element names | Pascal | `(string First, string Last) name = ("John", "Doe");` |
+| | | `var name = (First: "John", Last: "Doe");` |
+| | | `(string First, string Last) GetName() => ("John", "Doe");` |
+| Variables declared using tuple syntax | Camel | `(string first, string last) = ("John", "Doe");` |
+| | | `var (first, last) = ("John", "Doe");` |
+| Local variable | Camel | `listOfValues` |
+
+**Note:** in case of ambiguity, the rule higher in the table wins.
+
+### Don't include numbers in variables, parameters and type members :white_circle:
+In most cases they are a lazy excuse for not defining a clear and intention-revealing name.
+
+### Don't prefix fields except if otherwise stated in the naming definitions :red_circle:
+For example, don't use `g_` or `s_` to distinguish static from non-static fields. A method in which it is difficult to distinguish local variables from member fields is generally too big. Examples of incorrect identifier names are: `mUserName`, `m_loginTime`.
+
+### Don't use abbreviations :large_blue_circle:
+For example, use `ButtonOnClick` rather than `BtnOnClick`. Avoid single character variable names, such as `i` or `q`. Use `index` or `query` instead.
+
+### Name members, parameters and variables according to their meaning and not their type :large_blue_circle:
+- Use functional names. For example, `GetLength` is a better name than `GetInt`.
+- Don't use terms like `Enum`, `Class` or `Struct` in a name.
+- Identifiers that refer to a collection type should have plural names.
+
+### Name types using nouns, noun phrases or adjective phrases :large_blue_circle:
+For example, the name IComponent uses a descriptive noun, ICustomAttributeProvider uses a noun phrase and IPersistable uses an adjective.
+Bad examples include `SearchExamination` (a page to search for examinations), `Common` (does not end with a noun, and does not explain its purpose) and `SiteSecurity` (although the name is technically okay, it does not say anything about its purpose).
+
+Don't include terms like `Utility` or `Helper` in classes. Classes with names like that are usually static classes and are introduced without considering object-oriented principles.
+
+### Name generic type parameters with descriptive names :large_blue_circle:
+- Always prefix type parameter names with the letter `T`.
+- Always use a descriptive name unless a single-letter name is completely self-explanatory and a longer name would not add value. Use the single letter `T` as the type parameter in that case.
+- Consider indicating constraints placed on a type parameter in the name of the parameter. For example, a parameter constrained to `ISession` may be called `TSession`.
+
+### Don't repeat the name of a class or enumeration in its members :red_circle:
+``` c#
+class Employee
+{
+	// Wrong!
+	static GetEmployee() {...}
+	DeleteEmployee() {...}
+	
+	// Right
+	static Get() {...}
+	Delete() {...}
+	
+	// Also correct.
+	AddNewJob() {...}
+	RegisterForMeeting() {...}
+}
+```
+
+### Name members similarly to members of related .NET Framework classes :large_blue_circle:
+.NET developers are already accustomed to the naming patterns the framework uses, so following this same pattern helps them find their way in your classes as well. For instance, if you define a class that behaves like a collection, provide members like `Add`, `Remove` and `Count` instead of `AddItem`, `Delete` or `NumberOfItems`.
+
+### Avoid short names or names that can be mistaken for other names :red_circle:
+Although technically correct, statements like the following can be confusing:
+
+``` c#
+bool b001 = (lo == l0) ? (I1 == 11) : (lOl != 101);
+```
+
+### Properly name properties :large_blue_circle:
+- Name properties with nouns, noun phrases, or occasionally adjective phrases. 
+- Name boolean properties with an affirmative phrase. E.g. `CanSeek` instead of `CannotSeek`.
+- Consider prefixing boolean properties with `Is`, `Has`, `Can`, `Allows`, or `Supports`.
+- Consider giving a property the same name as its type. When you have a property that is strongly typed to an enumeration, the name of the property can be the same as the name of the enumeration. For example, if you have an enumeration named `CacheLevel`, a property that returns one of its values can also be named `CacheLevel`.
+
+### Name methods and local functions using verbs or verb-object pairs :large_blue_circle:
+Name a method or local function using a verb like `Show` or a verb-object pair such as `ShowDialog`. A good name should give a hint on the *what* of a member, and if possible, the *why*.
+
+Also, don't include `And` in the name of a method or local function. That implies that it is doing more than one thing, which violates the Single Responsibility Principle.
+
+### Name namespaces using names, layers, verbs and features :white_circle:
+For instance, the following namespaces are good examples of that guideline.
+
+``` c#
+NHibernate.Extensibility
+Microsoft.ServiceModel.WebApi
+Microsoft.VisualStudio.Debugging
+```
+
+**Note:** Never allow namespaces to contain the name of a type, but a noun in its plural form (e.g. `Collections`) is usually OK.
+
+### Group extension methods in a class suffixed with Extensions :red_circle:
+If the name of an extension method conflicts with another member or extension method, you must prefix the call with the class name. Having them in a dedicated class with the `Extensions` suffix improves readability.
+
+### Postfix asynchronous methods with `Async` or `TaskAsync` :red_circle:
+The general convention for methods and local functions that return `Task` or `Task<TResult>` is to postfix them with `Async`. But if such a method already exists, use `TaskAsync` instead.
