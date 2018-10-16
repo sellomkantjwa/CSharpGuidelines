@@ -5,6 +5,12 @@
 ## Index
 
 - [Class Design](pages/class-design.md)
+- [Member Design Guidelines](pages/member-design.md)
+- [Miscellaneous Design Guidelines](pages/misc-design.md)
+- [Maintainability Guidelines](pages/maintainability.md)
+- [Performance Guidelines](pages/performance.md)
+- [Framework Guidelines](pages/framework.md)
+- [Layout Guidelines](pages/layout.md)
 
 ## Introduction
 
@@ -14,7 +20,6 @@ Coding guidelines we should ideally follow. You are always free to challenge the
 Use the basic principles outlined in this guide to help you make that decision.
 
 ### 1.2. Purpose of this document
-Some notes on guidelines as per the original document (see: https://github.com/dennisdoomen/CSharpGuidelines).
 
 Not every developer:
 
