@@ -2,6 +2,7 @@
 
 ### Throw exceptions rather than returning some kind of status value :large_blue_circle:
 :police_car: There might be some disagreement on this, so lets discuss in detail
+
 A code base that uses return values to report success or failure tends to have nested if-statements sprinkled all over the code. Quite often, a caller forgets to check the return value anyway. Structured exception handling has been introduced to allow you to throw exceptions and catch or replace them at a higher layer. In most systems it is quite common to throw exceptions whenever an unexpected situation occurs.
 
 ### Provide a rich and meaningful exception message text or custom Exception class :large_blue_circle:
