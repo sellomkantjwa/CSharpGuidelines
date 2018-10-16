@@ -271,7 +271,10 @@ When throwing or handling exceptions in code that uses `async`/`await` or a `Tas
 This avoids deadlocks but ensuring that continuation after await does not have to run in the caller context. See [this article](https://medium.com/bynder-tech/c-why-you-should-use-configureawait-false-in-your-library-code-d7837dce3d7f)
 
 ### Prefer `async` and `await` when creating methods :red_circle:
-Using the async-await frees up resources on the current thread for other processes and should be preferred.
+Using the `async` frees up resources on the current thread for other processes and should be preferred.
+
+### Only use `async` for low-intensive long-running activities :red_circle:
+The usage of `async` won't automagically run something on a worker thread like `Task.Run` does. It just adds the necessary logic to allow releasing the current thread, and marshal the result back on that same thread if a long-running asynchronous operation has completed. In other words, use `async` only for I/O bound operations.
 
 ### Use generic constraints if applicable :red_circle:
 Instead of casting to and from the object type in generic types or methods, use `where` constraints or the `as` operator to specify the exact characteristics of the generic parameter.
@@ -847,3 +850,17 @@ If the name of an extension method conflicts with another member or extension me
 
 ### Postfix asynchronous methods with `Async` or `TaskAsync` :red_circle:
 The general convention for methods and local functions that return `Task` or `Task<TResult>` is to postfix them with `Async`. But if such a method already exists, use `TaskAsync` instead.
+
+## Performance Guidelines
+
+### Consider using `Any()` to determine whether an `IEnumerable<T>` is empty :large_blue_circle:
+When a member or local function returns an `IEnumerable<T>` or other collection class that does not expose a `Count` property, use the `Any()` extension method rather than `Count()` to determine whether the collection contains items. If you do use `Count()`, you risk that iterating over the entire collection might have a significant impact (such as when it really is an `IQueryable<T>` to a persistent store).
+
+**Note:** If you return an `IEnumerable<T>` to prevent changes from calling code, consider read-only classes.
+
+### Beware of mixing up `async`/`await` with `Task.Wait` :red_circle:
+`await` does not block the current thread but simply instructs the compiler to generate a state-machine. However, `Task.Wait` blocks the thread and may even cause deadlocks.
+
+### Prefer creating background tasks and batches with Hangfire for CPU-intensive activities :red_circle:
+:police_car: Original rule stated that you `Prefer Task.Run for CPU-intensive activities`
+Offload any heavy processing to a background task managed by the worker.
